@@ -1,0 +1,684 @@
+===============================================================
+Memory Managment in c++:
+
+What is Memory Management?
+Memory management is a process of managing computer memory, assigning the memory space to the programs to improve the overall system performance.
+
+Why is memory management required?
+As we know memory is allocated to the array at the declaration time. Sometimes the situation arises when the exact memory is not determined until runtime. To avoid such a situation, we declare an array with a maximum size, but some memory will be unused. To avoid the wastage of memory, we use the new operator to allocate the memory dynamically at the run time.
+
+==>A typical memory representation of a C++ program consists of the following sections.This would help in understanding the part of the memory where ,which types of variables are stored.
+
+==>Memory is divided into 2 segments
+1)code segment:
+The code segment where the compiled code of the program resides.It contains set of instructions in a program that
+are executed step by step.
+
+2)Data segment: Data segment is divided into three sections
+a)stack section:where memory is allocated for local variables.
+b)heap section:provides storage for variables that are dynamically allocated memory.
+c)data section:provides  the storage for global and static variables.
+
+Memory Management Operators
+In C language, we use the malloc() or calloc() functions to allocate the memory dynamically at run time, and free() function is used to deallocate the dynamically allocated memory. C++ also supports these functions, but C++ also defines unary operators such as new and delete to perform the same tasks, i.e., allocating and freeing the memory.
+
+==>Dynamic memory allocation in C/C++ refers to performing memory allocation manually by a programmer. Dynamically allocated memory is allocated on Heap
+==>The most important use is the flexibility provided to programmers. We are free to allocate and deallocate memory whenever we need it and whenever we don’t need it anymore
+
+imp ques
+Difference between Static Memory Allocation and Dynamic Memory Allocation
+
+1	Static Memory Allocation is done before program execution.
+	Dynamic Memory Allocation is done during program execution.
+2	It uses stack for managing the static allocation of memory		
+	It uses heap for managing the dynamic allocation of memory
+3	In Static Memory Allocation, there is no memory re-usability	
+	In Dynamic Memory Allocation, there is memory re-usability and memory can be freed when not required
+
+4	In this memory allocation scheme, execution is faster than dynamic memory allocation.	
+	In this memory allocation scheme, execution is slower than static memory allocation.
+5	In this memory is allocated at compile time.	
+	In this memory is allocated at run time.
+6	In this allocated memory remains from start to end of the program.	
+	In this allocated memory can be released at any time during the program.
+
+new and delete operators:
+
+==>You can allocate memory at run time within the heap for the variable of a given type using a special operator in C++ which returns the address of the space allocated. This operator is called new operator.
+If you are not in need of dynamically allocated memory anymore, you can use delete operator, which de-allocates memory previously allocated by new operator.
+
+==>In c++,memory is allocated dynamically through the use of new operator and memory is freed using delete operator.
+
+// declare an int pointer
+int* pointVar;
+// dynamically allocate memory using the new keyword 
+pointVar = new int;
+// assign value to allocated memory
+*pointVar = 45;
+
+Here, we have dynamically allocated memory for an int variable using the new operator.
+ we have used the pointer pointVar to allocate the memory  dynamically on heap section. This is because the new operator returns the address of the memory location.
+
+
+delete Operator
+Once we no longer need to use a variable that we have declared dynamically, we can deallocate the memory occupied by the variable.
+For this, the delete operator is used. It returns the memory to the operating system. This is known as memory deallocation.
+ This operator is mainly used either for those pointers which are allocated using a new operator;
+The syntax for this operator is
+delete pointerVariable;
+
+For example, if we allocate the memory to the pointer using the new operator, and now we want to delete it. To delete the pointer, we use the following statement:
+delete p;  
+
+To delete the array, we use the statement as given below:
+delete [] p;  
+
+Some important points related to delete operator are:
+
+1)It is either used to delete the array or non-array objects which are allocated by using the new keyword.
+2)To delete the array or non-array object, we use delete[] and delete operator, respectively.
+3)The new keyword allocated the memory in a heap; therefore, we can say that the delete operator always de-allocates the memory from the heap
+4)It does not destroy the pointer, but the value or the memory block, which is pointed by the pointer is destroyed.
+
+
+Example 1: C++ Dynamic Memory Allocation
+#include <iostream>
+using namespace std;
+int main() {
+  // declare an int pointer
+  int* pointInt;
+  // declare a float pointer
+  float* pointFloat;
+  // dynamically allocate memory
+  pointInt = new int;
+  pointFloat = new float;
+  // assigning value to the memory
+  *pointInt = 45;
+  *pointFloat = 45.45f;
+  cout << *pointInt << endl;
+  cout << *pointFloat << endl;
+int *p = new int(45);  
+cout<<*p;
+  // deallocate the memory
+  delete pointInt;
+  delete pointFloat;
+delete p;
+}
+
+Output
+
+45
+45.45
+=======================================
+#include<iostream>
+using namespace std;
+int main()
+{
+	int* ptr=new int(10);
+	cout<<*ptr;
+	delete  ptr;
+	
+}
+==================================================================================================
+Dynamic Memory Allocation for Arrays:
+
+Consider you want to allocate memory for an array of characters, i.e. string of 100 characters. 
+char * str=new char[100];
+==>The above statement allocates memory for 100 characters on the heap and stores the address of the first memory location in the character pointer str. To allocate memory for more than one character, subscript is used to indicate the size.
+==>memory is allocated for more than one character.In order to free all the space that has been allocated,subscript notation is used in delete statement.
+delete[] str;
+
+int main()
+{
+	char * str;
+	str=new char[100];
+	cin>>str;
+	cout<<str;
+	delete[] str;
+}
+ 
+Note: if [] is used with new, it should also be used with delete, otherwise it leads to memory leakage problem i.e only first element whose address is contained in the pointer is de-allocated resulting in the problem of memory leakage.
+==========================================================================================================
+// C++ Program to store GPA of n number of students and display it  where n is the number of students entered by the user
+
+#include <iostream>
+using namespace std;
+int main() {
+
+  int num;
+  cout << "Enter total number of students: ";
+  cin >> num;
+  float* ptr;
+    
+  // memory allocation of num number of floats
+  ptr = new float[num];
+
+  cout << "Enter GPA of students." << endl;
+  for (int i = 0; i < num; ++i) {
+    cout << "Student" << i + 1 << ": ";
+    cin >> *(ptr + i);
+  }
+
+  cout << "\nDisplaying GPA of students." << endl;
+  for (int i = 0; i < num; ++i) {
+    cout << "Student" << i + 1 << ": " << *(ptr + i) << endl;
+  }
+
+  // ptr memory is released
+  delete[] ptr;
+
+  return 0;
+}
+============================================================
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	int n,i;
+	cout<<"how many elements for which memory should be allocated\n";
+	cin>>n;
+	int* ptr=new int[n];
+	cout<<"accept elements\n";
+	for(i=0;i<n;i++)
+	cin>>ptr[i];
+	cout<<"display elements\n";
+	for(i=0;i<n;i++)
+	cout<<ptr[i];
+	delete[] ptr;
+	
+}
+========================================================================
+Dynamic object creation on heap
+
+#include<iostream>
+using namespace std;
+class cdate
+{
+	int dd,mm,yy;
+	public:
+		cdate()
+		{
+			dd=mm=yy=0;
+		}
+		cdate(int d,int m,int y)
+		{
+			dd=d;
+			mm=m;
+			yy=y;
+		}
+		void show()
+		{
+			cout<<dd<<"/"<<mm<<"/"<<yy<<endl;
+		}
+};
+int main()
+{
+	cdate* ptr=new cdate();
+	ptr->show();
+	cdate* ptr1=new cdate(1,3,2025);
+	ptr1->show();
+delete ptr;
+delete ptr1;
+}
+================================================
+Dynamic Array of object on heap
+  
+
+#include<iostream>
+using namespace std;
+class Student
+{
+	int rollno;
+	char name[20];
+	public:
+		void accept()
+		{
+			cin>>rollno;
+			cin>>name;
+		}
+		void display()
+		{
+			cout<<"rollno is \t"<<rollno<<"name is \t"<<name<<endl;
+			
+		}
+	
+};
+  
+  int main()
+  {
+  	int n,i;
+  	cout<<"enter no of students\n";
+  	cin>>n;
+  Student* ptr	=new Student[n];
+  cout<<"accept details\n";
+  for(i=0;i<n;i++)
+   ptr[i].accept();
+   cout<<"display details\n";
+  for(i=0;i<n;i++)
+   (ptr+i)->display();
+delete [] ptr;
+}
+  	
+  	
+  	
+  	
+  	
+  	
+ #include<iostream>
+using namespace std;
+class Student
+{
+	int rollno;
+	char name[20];
+	int marks[5];
+	public:
+		void accept()
+		{
+			int i,cnt=1;
+			cout<<"enter rollno for "<<cnt<<" student\n";
+			cin>>rollno;
+			cout<<"enter name for "<<cnt<<" student\n";
+			cin>>name;
+			cout<<"accept marks for "<<cnt<<" student\n";
+			for(i=0;i<=4;i++)
+			cin>>marks[i];
+			cnt++;
+		}
+		void display()
+		{
+			int i;
+			cout<<"rollno is \t"<<rollno<<"name is \t"<<name<<endl;
+			cout<<"marks are \n";
+			for(i=0;i<=4;i++)
+			cout<<marks[i]<<"\t";
+			
+		}
+	
+};
+  
+  int main()
+  {
+  	int n,i;
+  	cout<<"enter no of students\n";
+  	cin>>n;
+  Student* ptr	=new Student[n];
+  cout<<"accept details\n";
+  for(i=0;i<n;i++)
+   ptr[i].accept();
+   cout<<"display details\n";
+  for(i=0;i<n;i++)
+   (ptr+i)->display();
+}
+  	
+  	
+
+//accept no of subjects and name from the user dynamically and accept marks for each subject and display average and name
+of the student
+
+#include<iostream>
+using namespace std;
+int main()
+{
+ 	int n,m,i,sum=0;
+ 	float avg;
+	cout<<"accept no of subjects\n";
+	cin>>n;//5
+	cout<<"accept no of character\n";
+	cin>>m;//4
+	int* p_marks=new int[n];
+	char* p_name=new char[m+1];
+	cout<<"enter marks\n";
+	for(i=0;i<n;i++)
+	cin>>p_marks[i];
+	for(i=0;i<n;i++)
+	sum=sum+p_marks[i];
+	avg=(float)sum/n;
+	cout<<"enter name\n";
+	cin>>p_name;
+	cout<<"name of the student is "<<p_name<<endl;
+	cout<<"average is "<<avg<<endl;
+	delete[] p_marks;
+	delete[] p_name;
+} 	
+===========================================================  
+Program 3:
+
+#include <iostream> 
+using namespace std; 
+class Student { 
+  
+public: 
+    // Constructor 
+    Student() 
+    { 
+        cout << "Constructor is called!\n"; 
+    } 
+  
+    // Destructor 
+    ~Student() 
+    { 
+    	cout<<this;
+        cout << "Destructor is called!\n"; 
+    } 
+  
+    // Function to display message 
+    void write() 
+    { 
+        cout << "Writing!\n"; 
+    } 
+}; 
+  
+// Driver Code 
+int main() 
+{ 
+    // Create an array of the object 
+    // dynamically 
+    Student* student = new Student[3]; 
+  cout<<(student+0);
+	cout<<(student+1);
+	cout<<(student+2);
+    // Function Call to write() 
+    student[0].write(); 
+    student[1].write(); 
+    student[2].write(); 
+  
+    // De-allocate the memory 
+    // explicitly 
+    delete student; // delete[] student;
+ 
+    return 0; 
+}
+ 
+Conclusion:
+In C++, the single object of the class which is created at runtime using a new operator is deleted by using the delete operator, while the array of objects is deleted using the delete[] operator so that it cannot lead to a memory leak.
+===================================================================	
+ The following are the advantages of the new operator over malloc() function:
+1)It does not use the sizeof() operator as it automatically computes the size of the data object.
+2)It automatically returns the correct data type pointer, so it does not need to use the typecasting.
+
+Differences between the malloc() and new
+1)The new operator constructs an object, i.e., it calls the constructor to initialize an object while malloc() function does not call the constructor. The new operator invokes the constructor, and the delete operator invokes the destructor to destroy the object. This is the biggest difference between the malloc() and new.
+
+ 
+#include <iostream>
+using namespace std;
+ #include<stdlib.h>
+class A {
+    int a;
+ 
+public:
+    int* ptr;
+ 
+    // Constructor of class A
+    A()
+    {
+        cout << "Constructor was Called!"
+             << endl;
+    }
+};
+ 
+
+int main()
+{
+ 
+    // Create an object of class A using new operator
+    A* a = new A;
+    cout << "Object of class A was "
+         << "created using new operator!"
+         << endl;
+ 
+    // Create an object of class A using malloc operator
+    A* b = (A*)malloc(sizeof(A));
+    cout << "Object of class A was "
+         << "created using malloc()!"
+         << endl;
+ 
+    return 0;
+}
+ 
+Output
+Constructor was Called!
+Object of class A was created using new operator!
+Object of class A was created using malloc()!
+In the above program we can clearly see that while creating object using new operator Default Constructor was called and using malloc function Default Constructor was not called.
+
+2)The new is an operator, while malloc() is a predefined function in the stdlib header file.
+
+3)If the sufficient memory is not available in a heap, then the new operator will throw an exception while the malloc() function returns a NULL pointer.
+
+4In the case of a new operator, we have to use the delete operator to deallocate the memory. But in the case of malloc() function, we have to use the free() function to deallocate the memory.
+=====================================================================================================
+Differences between delete and free()
+
+1)The delete is an operator that de-allocates the memory dynamically while the free() is a function that destroys the memory at the runtime.
+2)When the delete operator destroys the allocated memory, then it calls the destructor of the class in C++, whereas the free() function does not call the destructor; it only frees the memory from the heap.
+ 
+#include <iostream>
+using namespace std;
+#include<stdlib.h>
+
+class A {
+    int a;
+public:
+    int* ptr;
+ 
+    A()
+    {
+        cout << "Constructor was Called!"
+             << endl;
+    }
+ 
+    // Destructor of class A
+    ~A()
+    {
+        cout << "Destructor was Called!"
+             << endl;
+    }
+};
+ 
+int main()
+{
+ 
+    // Create an object of class A
+    // using new operator
+    A* a = new A;
+    cout << "Object of class A was "
+         << "created using new operator!"
+         << endl;
+ 
+    delete a;
+    cout << "Object of class A was "
+         << "deleted using delete keyword!"
+         << endl;
+ 
+    cout << endl;
+ 
+    A* b = (A*)malloc(sizeof(A));
+    cout << "Object of class A was "
+         << "created using malloc()!"
+         << endl;
+ 
+    free(b);
+    cout << "Object of class A was "
+         << "deleted using free()!"
+         << endl;
+ 
+    return 0;
+}
+
+
+Output
+Constructor was Called!
+Object of class A was created using new operator!
+Destructor was Called!
+Object of class A was deleted using delete keyword!
+
+Object of class A was created using malloc()!
+Object of class A was deleted using free()!
+=======================================================================
+Conclusion:
+In C++, the single object of the class which is created at runtime using a new operator is deleted by using the delete operator, while the array of objects is deleted using the delete[] operator so that it cannot lead to a memory leak.
+==========================================================
+Dynamic initialization of object in C++
+
+==>Dynamic initialization of object refers to initializing the objects at a run time i.e., the initial value of an object is provided during run time.
+==>It can be achieved by using constructors and by passing different parameter list/signatures to the constructors.
+
+==>This comes in really handy when there are multiple constructors of the same class with different inputs.
+==========================================
+Dynamic Constructor:
+The constructor used for allocating the memory at runtime is known as the dynamic constructor.
+The memory is allocated at runtime using a new operator and similarly, memory is deallocated at runtime using the delete operator.
+
+Ex:
+// C++ program for dynamic allocation
+#include <iostream>
+using namespace std;
+ class Demo {
+    int* ptr;
+ public:
+      Demo()
+    {
+        // Dynamically initializing ptr using new
+        ptr = new int;
+        *ptr = 10;
+    }
+     // Function to display the value of ptr
+    void display()
+    {
+        cout << *ptr << endl;
+    }
+};
+ int main()
+{
+    Demo obj1;
+     obj1.display();
+}
+
+Output
+10
+In the above example, new is used to dynamically initialize the variable in default constructor and memory is allocated on the heap.
+The objects of the class Demo calls the function and it displays the value of dynamically allocated variable i.e ptr.
+
+============================================================================
+#include <iostream> 
+using namespace std; 
+#include<string.h>
+class Student 
+{ 
+ 	int *p_rollno; 
+public: 
+    Student() 
+    { 
+        cout << "Constructor is called!\n"; 
+        p_rollno=new int;
+        *p_rollno=420;
+       
+    } 
+   ~Student() 
+    { 
+        cout << "Destructor is called!\n"; 
+        
+        if(p_rollno)
+        {
+		cout<<"in if destructor\n";
+        delete p_rollno;
+        p_rollno=NULL;
+    	}
+    }
+  
+}; 
+  
+int main() 
+{ 
+	Student s1;
+	s1.~Student();
+ 
+}
+
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
