@@ -1,0 +1,872 @@
+DAY 2:
+
+
+
+Types of Variables
+There are three types of variables based on the scope of variables in C++
+1)Local Variables
+2)Global Variable
+3)Instance Variables
+4)Static Variables
+
+1)local variable
+==>The variable declared within the parenthesis of any function or any block is  called as local variable.
+==>These variables are created when entered into the block or the function is called and destroyed after exiting from the block or when the call returns from the function.
+==>scope means how long the variable or value of that variable can be accessed
+The scope of these variables exists only within the block in which the variable is declared. i.e. we can access this variable only within that block.
+==>lifetime means how long the variable exists in the memory.
+ lifetime is within the block/within the function
+==>storage is stack section
+==>In local variable lifetime depends on scope of variable
+
+#include<iostream>
+using namespace std;
+void show();
+int main()
+{
+	show();
+	show();
+	show();
+	return 0;	
+}
+void show()
+{
+	int x=0;
+	cout<<x<<endl;
+	x++;
+}
+output:000
+===============================================================
+
+2)Global variable
+
+==>Variable declared outside the function/block is called as global variable
+==>initial value is 0
+==>storage is data section
+==>lifetime is through out the program
+==>scope is through out the program
+
+#include<iostream>
+using namespace std;
+void show();
+int y=10;
+int main()
+{
+	cout<<y<<endl;
+	y++;
+	show();
+	cout<<y<<endl;
+	return 0;	
+}
+void show()
+{
+	cout<<y<<endl;
+	int x=0;
+	cout<<x<<endl;
+	x++;
+	cout<<y<<endl;
+}
+
+=================================
+#include<iostream>
+using namespace std;
+void show();
+int y=10;
+int main()
+{
+	cout<<y<<endl;
+	y++;
+	show();
+	cout<<y<<endl;
+	return 0;	
+}
+void show()
+{
+	cout<<y<<endl;
+	int y=0;
+	cout<<y<<endl;
+	y++;
+	cout<<y<<endl;
+}
+==================================
+#include<iostream>
+using namespace std;
+void show();
+int y=10;
+int main()
+{
+	cout<<y<<endl;
+	y++;
+	show();
+	cout<<y<<endl;
+	return 0;	
+}
+void show()
+{
+	cout<<y<<endl;
+	 y=0;
+	cout<<y<<endl;
+	y++;
+	cout<<y<<endl;
+}
+===============================================================
+
+3)Instance variable
+
+1)whenever an instance is created,the variable to whom  memory is allocated  is called as instance variable
+2)memory for instance variable is allocated per object
+i.e 50 object means 50 copies is created for instance variable
+3)changes made to instance variable of one object will not be reflected into another object's instance variable.
+
+
+
+=============================================================================================
+Static
+
+keyword:static
+storage:data section
+lifetime:through out the program
+scope for global static variable is thru out the prog
+scope for local static variable is within the block/function
+initial value:0
+
+
+
+#include<iostream>
+using namespace std;
+static int x=10;//global static variable
+int main()
+{
+	static int y=20;//local static variable
+}
+
+
+/*
+scope of x : thru out the program
+scope of y:within the main()
+lifetime:thru out the program*/
+================================================
+#include<iostream>
+using namespace std;
+void show();
+int main()
+{
+	show();
+	show();
+	show();
+
+}
+void show()
+{
+	static int x;
+	cout<<x<<endl;//012
+	x++;
+}
+==>memory is allocated only once for static varaible
+==>reinitilization doesnt takes place for static variable 
+===============================================================
+==================================================================================
+Reference variable..
+
+==>A reference variable is an alias, that is, another name for an already existing variable.
+
+FAQ:
+In c++ we have pass by reference. but why?
+==>In call by address,we have to declared formal parameter as a pointer and pointer holds address.
+ problem is we can initialise any  variable address in future.First  variable address is passed,later we can change address inside pointer. Means we can initialize another variable address into this pointer, due to this which variable adress it is going to store,makes confusion. Thats why pointer is not secured.To overcome the above limitations, reference datatype is introduced.
+
+==>A variable can be declared as a reference by putting '&' in the declaration. 
+syntax:
+data_type &refname = existing variable;
+
+ex:
+int num=10;
+int &refnum=num;
+
+==>num is an integer variable, located at some address which is initialized to a value 10.
+==>refnum is a another name for variable num, therefore refnum is a reference to num.
+
+==>We can access the contents of the variable through either the original variable name or the reference  name. 
+ex:
+int i = 17;
+int &r = i;
+r is the reference name for the original variable name i.
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	int num=10;
+	int &refnum=num;
+	cout<<num<<"  "<<refnum<<endl;
+	num=100;
+	cout<<num<<"  "<<refnum<<endl;
+	cout<<&num<<"   "<<&refnum<<endl;
+	
+}
+
+==>No seperate memory is allocated for a reference.Its just an alternative name given to the existing variable.
+==>Reference must be initialized at the time of the declaration.
+	
+	int num=10;
+	int &refnum;//error
+	refnum=num;
+
+==>Once a reference is initialized to an variable, it cannot be  refer to another variable i.e it is secured. 
+hence reference is a rigid connection.
+
+#include <iostream>  
+using namespace std;  
+int main()  
+{  
+int x=11; // variable initialization  
+int z=67;  
+int &y=x; // y reference to x  
+int &y=z; // y reference to z, but throws a compile-time error.  
+return 0;
+}  
+========================================================
+pass by value
+
+#include <iostream>  
+using namespace std; 
+void swap(int,int);
+int main()  
+{  
+	int a,b;
+	cout<<"enter values of a & b\n"<<endl;
+	cin>>a>>b;//10 20
+	swap(a,b);
+	cout<<"after swapping "<<endl;
+	cout<<"values of a & b is"<<a<<"\t"<<b<<endl;
+}
+void swap(int p,int q)
+{
+	int temp;
+	temp=p;
+	p=q;
+	q=temp;
+	
+}
+
+===============================================
+#include <iostream>  
+using namespace std; 
+void swap(int*,int*);
+int main()  
+{  
+	int a,b;
+	cout<<"enter values of a & b\n"<<endl;
+	cin>>a>>b;//10 20
+	swap(&a,&b);
+	cout<<"after swapping "<<endl;
+	cout<<"values of a & b is"<<a<<"\t"<<b<<endl;
+}
+void swap(int* p,int* q)
+{
+	int temp;
+	temp=*p;
+	*p=*q;
+	*q=temp;
+	
+}
+================================================================
+
+
+
+Reference can pass as a parameter to function.
+
+==>References can also be passed as a function parameter. It does not create a copy of the argument and behaves as an alias for a parameter. It enhances the performance as it does not create a copy of the argument.As it doesnot create a copy for reference,memory requirement is less .
+Pass by reference will reduce the complexity  generated by pointers in pass by address.
+
+#include <iostream>  
+using namespace std; 
+void swap(int&, int&); 
+int main()  
+{  
+	int a,b;
+	cout<<"enter values of a & b\n"<<endl;
+	cin>>a>>b;
+	swap(a,b);
+	cout<<"after swapping "<<endl;
+	cout<<"values of a & b is"<<a<<b<<endl;
+}
+void swap(int &p,int &q)
+{
+	int temp;
+	temp=p;
+	p=q;
+	q=temp;
+	
+}
+===================================================
+//more than 1 reference/alias name can be given to a single variable
+#include <iostream> 
+using namespace std; 
+ int main() 
+{ 
+    int num=10;
+	int& a=num;
+	int &b=num;
+	cout<<a<<b<<num;
+	a=20;
+	cout<<a<<b<<num;
+}
+
+=========================================================================
+#include <iostream> 
+using namespace std; 
+ int main() 
+{ 
+    int num=10;
+	int &a=num;
+	int &b=num;
+	printf("%d %d %d\n",&a,&b,&num);
+	cout<<&a<<"\t"<<&b<<"\t"<<&num;
+}
+
+======================================
+#include <iostream> 
+using namespace std; 
+int main()
+{
+int a=100;
+int &b=a;
+int &c=b;
+cout<<a<<b<<c;
+c=200;
+cout<<a<<b<<c;
+}
+========================================================================================
+
+Difference between pointer and reference;
+1)pointer is a flexible connection. it can point to any variable at a given point of a program.
+Reference is a rigid connection,reference once created,cannot refer to any other object.
+
+2)pointer has to be dereferenced using * operator to access the value at the address pointed by it.
+A reference has direct connection as it is another name for the same memory location.
+
+3)Reference cannot be null whereas pointer can point to null to indicate that they are not pointing to any valid thing. .
+
+========================================================================================
+
+
+
+
+
+
+
+FAQ:Can pointer point to NULL?
+#include <iostream>
+using namespace std;
+ int main()
+{
+    int* ptr = NULL;
+    int& ref = *ptr;
+    cout << ref << '\n';
+}
+//ERROR
+===================================================================================
+Scope resolution operator
+#include <iostream> 
+using namespace std; 
+ class Demo
+ {
+ 	int x;
+ 	public:
+ 		void accept();
+ 		int display();
+ 		
+ };
+ /*returntype classname::functionname(datatype argument name)
+ {
+}*/
+int Demo::display()
+{
+	
+}
+void Demo::accept()
+{
+	
+}
+
+ int main()
+ {
+ 	Demo d;
+ 	d.accept();
+ 
+ 
+ 
+ }
+ ======================================================
+Constructor
+
+Sequence after creation of object
+1)memory  allocated by the compiler 
+2)constructor invocation by compiler implicitly
+3)memory initialization by constructor
+
+==>Constructor in C++ is a special function that is invoked automatically at the time of object creation. It is used to initialize the data members of newly created objects.
+==>The constructor in C++ has the same name as the class . It constructs the values i.e. provides data for the object which is why it is known as constructor.
+==>Constructor do not return value, hence they do not have a return type not even void.
+==>Constructor cannot be constant member function.
+ 
+The prototype of the constructor looks like 
+     <class-name> (list-of-parameters);
+
+Constructor can be defined inside the class declaration or outside the class declaration
+a.    Syntax for defining the constructor within the class
+        <class-name>(list-of-parameters)
+        {
+                  //constructor definition
+        }
+
+b.    Syntax for defining the constructor outside the class
+
+        <class-name>: :<class-name/functionname>(list-of-parameters)
+        {
+                //constructor definition
+        }
+
+ Types of Constructors
+Default Constructors: 
+==>The constructor which doesn’t take any argument. It has no parameters. It is also called as no argument constructor.
+==>If constructor is not defined in the source code by the programmer, then the compiler defined the default constructor implicitly during compilation .
+#include<iostream>
+using namespace std;
+class Cdate
+{
+	int dd,mm,yy;
+	public:
+		void display()
+		{
+			cout<<"display today's date\n";
+			cout<<dd<<"/"<<mm<<"/"<<yy<<endl;
+		}
+};
+
+int main()
+{
+	Cdate d1;
+	d1.display();
+
+	
+}
+
+======================================================
+==>There can be only one no argument constructor per class.
+=================================================
+
+#include<iostream>
+using namespace std;
+class Cdate
+{
+	int dd,mm,yy;
+	public:
+		Cdate(int,int,int);
+		Cdate()//no argument constructor
+		{
+			cout<<"default constructor called\n";
+			dd=26;
+			mm=2;
+			yy=2025;
+			
+		}
+
+		void display()
+		{
+			cout<<"display today's date\n";
+			cout<<dd<<"/"<<mm<<"/"<<yy<<endl;
+		}
+};
+
+Cdate::Cdate(int d,int m ,int y)
+{
+	cout<<"para constructor called\n";
+	dd=d;
+	mm=m;
+	yy=y;
+	
+}
+int main()
+{
+	Cdate d1;
+	Cdate d2(27,2,2025);
+	d1.display();
+	d2.display();
+
+	
+}
+=======================================
+
+FAQs
+
+1. What is the significance of the default constructor? 
+
+    ==>They are used to create objects, which do not have any specific initial value. 
+
+2. Is a default constructor automatically provided?
+
+   ==>If no constructors are explicitly declared in the class, a default constructor is provided automatically by the compiler. 
+
+=====================================================================
+2. Parameterized Constructors: 
+
+==>A constructor with parameters is called as parametrized constructor.
+ ==> It is used to provide different values to distinct objects.
+==>If Parametrized constructor is not defined in the source code by the programmer, then the compiler cannot defined the default copy of Parametrized constructor implicitly during compilation.
+#include<iostream>
+using namespace std;
+class Cdate
+{
+	int dd,mm,yy;
+	public:
+		
+		void display()
+		{
+			cout<<"display today's date\n";
+			cout<<dd<<"/"<<mm<<"/"<<yy<<endl;
+		}
+};
+
+
+int main()
+{
+	Cdate d1(1,2,2025);
+
+
+	
+}
+
+==============================================================
+
+==>Constructors can be overloaded with different signatures.
+
+==> when the parameterized constructor is defined explicitly by programmer and no argument constructor is not defined explicitly, the compiler will not implicitly give call  to the default constructor and hence it will generate compilation error while creating object
+#include<iostream>
+using namespace std;
+class Cdate
+{
+	int dd,mm,yy;
+	public:
+		Cdate(int,int,int);
+		void display()
+		{
+			cout<<"display today's date\n";
+			cout<<dd<<"/"<<mm<<"/"<<yy<<endl;
+		}
+};
+
+Cdate::Cdate(int d,int m ,int y)
+{
+	cout<<"para constructor called\n";
+	dd=d;
+	mm=m;
+	yy=y;
+	
+}
+int main()
+{
+	Cdate d1;//error 
+
+
+	
+}
+
+=================================================
+#include<iostream>
+using namespace std;
+#include<string.h>
+class Student
+{
+	int rollno;
+	char name[10];
+	float per;
+	public:
+		Student(int r,char* ptr,float p)
+		{
+			rollno=r;
+			strcpy(name,ptr);
+			per=p;			
+		}
+		void display()
+		{
+			cout<<"rollno  is  "<<rollno<<"name is "<<name<<"per is "<<per; 
+		}
+		
+};
+int main()
+{
+	Student s1(101,"rahul",67.42);
+	s1.display();
+	
+}
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>  
+using namespace std; 
+class Complex
+{
+
+	int real,img;
+	public:
+		void show();
+		Complex();
+		Complex(int,int);
+		
+};
+void Complex ::show()
+{
+	cout<<"complex no is "<<real<<"+"<<img<<"i"<<endl;
+}
+Complex::Complex()
+{
+	cout<<"in default constructor\n";
+	//real=10;
+	//img=20;
+	cout<<"enter value of real\n";
+	cin>>real;
+	cout<<"enter value of img\n";
+	cin>>img;
+	
+}
+Complex::Complex(int r,int i)
+{
+	cout<<"in parametrized constructor\n";
+	real=r;
+	img=i;
+}
+int main()
+{
+	Complex c1,c2;
+	c1.show();
+	c2.show();
+	Complex c3(5,6);
+	c3.show();
+	
+}
+
+
+===================================================
+
+Excercise 1:
+#include <iostream>
+using namespace std;
+ class Point {
+    Point()
+ {
+ cout << "Constructor called"; 
+ }
+};
+int main()
+{
+    Point t1;
+    return 0;
+}
+
+Excercise 2:
+#include<iostream>
+using namespace std;
+class Point {
+public:
+    Point() { cout << "Constructor called"; }
+};
+int main()
+{
+   Point t1, *t2;
+   return 0;
+}
+==========================================================
+Function Overloading
+
+==>In C++, We can have more than one constructor in a class with same name, as long as each has a different list of signatures.This concept is known as Constructor Overloading 
+==>Two or more function having same function name but different signatures is called as function overloading.
+==> In Function Overloading Function name should be the same and the arguments should be different. 
+==>The criteria to overload a constructor is to differ the number of arguments or the type of arguments or sequence of the argument.
+==>. We dont consider return type as a criteria to overload a constructor.
+
+Why Function Overloading?
+Suppose you have to perform addition of the given numbers but there can be any number of arguments, if you write the function such as a(int,int) for two parameters, and b(int,int,int) for three parameters then it may be difficult for you to understand the behavior of the function because  function name will be different.
+ 
+The parameters should follow any one or more than one of the following conditions for Function overloading:
+
+1)Parameters should have a different type
+add(int a, int b)
+add(double a, double b)
+
+#include <iostream>
+using namespace std;
+ void add(int a, int b)
+{
+  cout << "sum = " << (a + b);
+}
+ void add(double a, double b)
+{
+    cout << endl << "sum = " << (a + b);
+}
+ int main()
+{
+    add(10, 2);
+    add(5.3, 6.2);
+ }
+
+2)Parameters should have a different number of argument
+add(int a, int b)
+add(int a, int b, int c)
+
+#include <iostream>
+using namespace std;
+ void add(int a, int b)
+{
+  cout << "sum = " << (a + b);
+}
+ void add(int a, int b, int c)
+{
+    cout << endl << "sum = " << (a + b + c);
+}
+int main()
+{
+    add(10, 2);
+    add(5, 6, 4);
+  }
+
+3)Parameters should have a different sequence of parameters.
+add(int a, double b)
+add(double a, int b)
+
+#include<iostream>
+using namespace std;
+ void add(int a, double b)
+{
+    cout<<"sum = "<<(a+b);
+} 
+ void  add(double a, int b)
+{
+    cout<<endl<<"sum = "<<(a+b);
+} 
+ int main()
+{
+    add(10,2.5);
+    add(5.5,6);
+ }
+
+------------------------------------
+How does Function Overloading work?
+Exact match:- (Function name and Parameter)
+If a not exact match is found:–
+               ->Char are promoted to an int.
+
+               ->Float is promoted to double
+  	       ->    A bool can be promoted to an int (FALSE counts as 0, TRUE as 1).
+If no match is found:
+               ->C++ tries to find a match through the standard conversion.
+
+ELSE ERROR
+
+#include<iostream>
+using namespace std;
+ void add(int a, char b)
+{
+    cout<<"sum = "<<(a+b);
+} 
+ void add(int a,int b)
+{
+    cout<<endl<<"sum = "<<(a+b);
+} 
+void add(double a,double b)
+{
+    cout<<endl<<"sum = "<<(a+b);
+}
+ int main()
+{
+    add('A','B');
+    add(true,false);
+    add(1.2f,1.2f);
+ }
+
+
+=========================================================
+Array in C++
+
+In C++, an array is a data structure that is used to store multiple values of similar data types in a contiguous memory location.
+
+Array Declaration in C++
+In C++, we can declare an array by simply specifying the data type first and then the name of an array with its size.
+data_type array_name[Size_of_array];
+
+#include<iostream>
+using namespace std;
+int main()
+{
+    int a[5];
+    int i;
+    cout<<"accept elements\n";
+    for(i=0;i<=4;i++)
+    cin>>a[i];
+     cout<<"display elements\n";
+    for(i=0;i<=4;i++)
+    cout<<a[i]<<"\t";
+}
+
+#include<iostream>
+using namespace std;
+int main()
+{
+    int a[5];
+    int i;
+    cout<<"accept elements\n";
+    for(i=0;i<=4;i++)
+    cin>>*(a+i);
+     cout<<"display elements\n";
+    for(i=0;i<=4;i++)
+    cout<<*(i+a)<<"\t";
+}
+
+write a program to take Inputs from User and Store Them in an Array
+#include <iostream>
+using namespace std;
+int main()
+ {
+  int numbers[5];
+  cout << "Enter 5 numbers: " << endl;
+  //  store input from user to array
+  for (int i = 0; i < 5; ++i) {
+    cin >> numbers[i];
+  }
+  cout << "The numbers are: ";
+
+  //  print array elements
+  for (int n = 0; n < 5; ++n) {
+    cout << numbers[n] << "  ";
+  }
+
+  return 0;
+}
+============================================================================
+#include <iostream>
+using namespace std;
+int main()
+ {
+  int numbers[5];
+  cout << "Enter 5 numbers: " << endl;
+  //  store input from user to array
+  for (int i = 0; i < 5; ++i) {
+    cin >>*(numbers+i);
+  }
+
+  cout << "The numbers are: ";
+
+  //  print array elements
+  for (int n = 0; n < 5; ++n) {
+    cout << *(numbers+n) << "  ";
+  }
+
+  return 0;
+}
