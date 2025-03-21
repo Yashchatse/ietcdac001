@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Table Rows Without Loop</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 50%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="fetchData()">Fetch Data</button>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
+
+  <script>
+    function fetchData() {
+      const xhr = new XMLHttpRequest();
+
+      // Simulating JSON response
+      const jsonString = `[{"id":1, "name":"rohan"}, {"id":2, "name":"yash"}, {"id":3, "name":"priya"}]`;
+
+      xhr.open('GET', 'data.json', true);
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          console.log('Data fetched successfully');
+
+          // Parse JSON
+          const data = JSON.parse(jsonString);
+
+          // Generate table rows without a loop using map() and join()
+          document.getElementById('tableBody').innerHTML = data.map(obj => 
+            `<tr><td>${obj.id}</td><td>${obj.name}</td></tr>`
+          ).join('');
+        } else {
+          console.error('Error fetching data. Status:', xhr.status);
+        }
+      };
+
+      xhr.onerror = function () {
+        console.error('Request failed');
+      };
+
+      xhr.send();
+    }
+  </script>
+</body>
+</html>
