@@ -1,0 +1,404 @@
+Introduction to Node.js 
+==>Node js is a software that will run javascript code.
+==>node js is javascript runtime environment that run js code
+==>Nodejs is neither a language nor a library.
+
+
+Why to go for nodejs?
+==>Earlier js was only meant to do client side scripting.js was only meant to be executed on the browser.
+==>For developing frontend application we used to use only html,css,js. on backend side we have varieties of choices like java,python
+every backend developer is familier with js.Some people thought why js should be limited with frontend. they have extended js functionalities to backend also.They thought why not to use js functionalities for server applications.
+they thought
+
+
+
+
+
+
+==>Javascript code runs on browser only,we cannot run js code outside the browser.js engine is responsible for js execution but js engine is available inside browser.they thought lets extract js engine from the browser and made some modifications and created 1 software called as node js.
+==>developer of node js is RYAN DAHL -->embed v8 engine of chrome brower with c++---------->node js
+==>uses asynchronus techniques(concurrently executing fast)
+==>Now nodejs became the  application that doesnt depend on browser. now using this node js,we can directly run ur js file without dependency of the browser. we just need to install nodejs in our system.
+==>create .js file and node js will execute that file
+==>using nodejs we can directly execute .js file and results be display on .nodejs console.
+==>using node js we can write a complete server/api/backened in javascript.
+Node.js also provides a rich library of various JavaScript modules to simplify the development of web applications.
+
+    Node.js = Runtime Environment + JavaScript Library  
+
+=========================================================================================
+download nodejs
+ https://nodejs.org
+
+
+slogan 
+"Run javascript everywhere"
+means we can run javascript on server side,frontend side also.
+
+====================================================
+==>we cant perform operations that are related to frontend in .js file  like document.write,dom manipulation,updating styles,dealing with html elements.
+==>now js code will directly run on nodejs not on browser.
+
+
+==>command to execute js code using node js
+node filename.js
+
+ex:
+node1.js
+console.log("hello");
+//on which console this msg will print==>console of node js
+
+
+=================================================
+var msg="hello node js";
+console.log(msg);
+
+======================================================================
+if we want to simplify development cycle, so we are getting already defined libraries  to create application,already predefined functions , classes and properties are there.
+Express is a library that we are going to make use of inorder to create our own server using javascript. 
+
+
+
+===============================================================
+module:
+==>it is a javascript file which is a  collection of various function,classes and properties(constants).
+==>once u have module,we can use that module in different js files. 
+==>module can be a js file with lots of resuability stuff inside it.
+
+Types of modules
+1)1)Built in modules:already builtin modules in node js
+2)Custom/userdefined : modules:a module created by developer
+
+1)Built in modules
+==>already builtin modules in node js
+==>when u install node js in your system at that time we will get built in modules which gets installed automatically in our system.
+ex:http(to create our own server)(we want to create server using js that should become capable of listing to a request,processing ,return a response),for that we are getting predefined functions in a http module .
+ex:fs -->if we want to deal with file system module
+ex:url-->if we want to deal with URL's (read url,process url)
+
+How to use Built-in modules?
+==>in c,c++ we are required to include headerfiles
+==>in java we are required to import packages.
+==>in js we are required the module(which module u require)
+
+==>require() is used to import/include a module into js file
+var ref=require('module-name')//require() gives reference of the attached module.
+==>with the help of ref we can call any function of this module.
+
+ex1-require('http').demo()
+ex2-var ref=require('http');
+	ref.demo();
+===========================================================================
+==>create our own server.
+requirements are server should run on some ip address, but we dont have any realtime server. 
+treat our system as our server.if our local system is acting like a server then we get  ip address 127.0.0.1 of our own system (localhost is the domain name)
+==>if nodejs is creating local server then it will run on 127.0.0.1 . every ip address is having 1 one domain name like facebook.come,amazon.in
+==>localhost is the domain name for reaching out to ip address 127.0.0.1
+
+==>nodejs will give ip address as 127.0.0.1, if we want to send request from the brower to the our server ,so on which ip address the request shld be pass i.e  127.0.0.1/localhost(domain name)
+==>when u r sending request to your own server only writing ip address is not enough,we have to defined port no.
+3 web application is running on 127.0.0.1 so i want to send request to only 1 webapplication.how to uniquly identify webappliation by using port number.we have to assign unique port number.
+==>port number is just a unique identity given to a process running on a server so that we can know in prior how we can reach to specific application.so its developers responsilbilty to assign a port number.
+
+127.0.0.1:port-no(its a proper way of sending request to our own server)
+==>if i want to send request to student management application,
+http://127.0.0.1:4500 (we are sending req to  student management application)
+ http://127.0.0.1:5500 (we are sending req to  bookmyshow application)
+
+
+==>dont use 8080(tomcat server),3600(mysql),3000(react),27017==>mongodb
+
+
+===========================================================================
+CREATE A SERVER BY USING NODEJS
+==>we are getting 1 predefined module i.e http module .in this module,we will get predefined functions to create server and to specify port number.
+
+==>cmd prompt will terminate after executing 1 instruction,server shouldnot  going to stop in between,server will continously listen to your incoming request and give response.server should be in continously in listening mode.
+
+
+const http=require('http');
+const server=http.createServer((req,res)=>{
+
+//read the request or url use request obj
+//send  the response use response obj
+
+});
+//createServer() will create server ,return reference of newly created server. with the help of reference,we can  start /stop the server.
+//now we want to create server that will accept request and return response for that, createserver() will accept one callback function as a argument of createserver().this function will be executed as a callback whenever request will be send by client
+server.listen(port) //as soon as the server starts,listen() executes. server will now continous listen to the request.
+===========================================================================
+==>createServer() returns a reference to newly created server.it accepts one call back function, and this callback will have 2 arguments.
+This callback function will always be executed when there is a request from a client.
+==>two argument:first one will be for request obj and 2nd will be for response obj.
+==>we can use certain data/url from req obj 
+===========================================================================================
+
+
+const http=require('http');
+const server=http.createServer((request,response)=>{
+
+response.write("hello world");
+response.end();//this function will terminate the processing of server and send the response on the browser
+});
+server.listen(4500);
+
+node node1.js // start the server    ctr+c
+open browser-->127.0.0.1:4500 //send the request to url and portno,
+//ctr+c will break server execution(make server stop and then restart)  if we make some changes in the source code.server wont do live updates
+
+===============================================================
+==>listen() can take one callback function as the 2nd argument. this callback function will be  executed when server has started listening to the requests (at the same time of start of the server). so all the initial logic which we want to execute as soon as the server gets started,like db connection,opening few resources can be done inside this callback.
+
+
+const http=require('http');
+const PORT=4500;
+const server=http.createServer((request,response)=>{
+
+response.write("hello world");
+response.end();//this function will terminate the processing of server
+});
+server.listen(PORT,()=>{
+console.log("SERVER IS LISTENING ON ${PORT}");
+
+
+
+
+
+});
+
+//ctr+c will break server execution.
+=====================================================================
+const http=require('http');
+const PORT=4500;
+const server=http.createServer((request,response)=>{
+
+var x=4;
+var y=8;
+response.write(`sum of ${x} and ${y} is ${x+y}`);
+response.end();//this function will terminate the processing of server
+});
+server.listen(PORT,()=>{
+console.log("SERVER IS LISTENING ON ${PORT}");
+
+
+
+
+
+});
+
+//ctr+c will break server execution.
+
+
+
+====================================================================
+2)custom/userdefined module==>A module created by developer.
+(module)//this module functions cannot be accessible outside
+
+my-module.js
+function sum(x,y){
+    return x+y;
+    
+    }
+       ==============================================================================================
+mymodule.js
+    exports.sum=(x,y)=>{
+return x+y;
+
+}
+
+ exports.factorial=(num)=>{
+var fact=1;
+for(let i=1;i<=num;i++)
+{
+fact=fact*i;
+}
+return fact;
+}
+
+my-app.js
+const http=require('http');
+const mymodule=require('./mymodule.js');//pass path if u r requiring ur own module. for searching files in current directory use ./
+const PORT=4500;
+const server=http.createServer((request,response)=>{
+
+var x=4;
+var y=8;
+var n=5;
+var z=mymodule.sum(x,y);
+var f=mymodule.factorial(n);
+response.write(`sum of ${x} and ${y} is ${z} and factorail of ${n} is ${f}`);
+
+response.end();//this function will terminate the processing of server
+});
+server.listen(PORT,()=>{
+console.log("SERVER IS LISTENING ON ${PORT}");
+});
+
+    ===================================================================
+
+//we are sending response in the form of string like response.write(`sum of ${x} and ${y} is ${z} and factorail of ${n} is ${f}`);
+==>we can send json response like response.write({sum:z,factorial:f});
+convert json object into string .use stringify()
+
+
+exports.sum=(x,y)=>{
+    return x+y;
+    
+    }
+
+    exports.factorial=(num)=>{
+        var fact=1;
+        for(let i=1;i<=num;i++)
+        {
+        fact=fact*i;
+        }
+        return fact;
+        }
+        
+    
+======================================================================
+
+
+const http=require('http');
+const mymodule=require('./mymodule.js');//pass path if u r requiring ur own module. for searching files in current directory use ./
+const PORT=4500;
+const server=http.createServer((request,response)=>{
+
+var x=4;
+var y=8;
+var n=5;
+var z=mymodule.sum(x,y);
+var f=mymodule.factorial(n);
+response.write(`sum of ${x} and ${y} is ${z} and factorail of ${n} is ${f}`);
+response.write(JSON.stringify({sum:z,factorial:f}));
+
+response.end();//this function will terminate the processing of server
+});
+server.listen(PORT,()=>{
+console.log("SERVER IS LISTENING ON ${PORT}");
+});
+
+
+
+
+=======================================
+NODE FS MODULE
+
+The Node.js file system module allows you to work with the file system on your computer.
+To include the File System module, use the require() method:
+var fs = require('fs');
+
+Common use for the File System module:
+
+    Read files
+    Create files
+    Update files
+    Delete files
+    Rename files
+
+module -->fs
+inside fs module readFile() is there for reading the file
+
+//read the content of the file 
+for reading the file,first the file should exist
+
+const fs=require('fs');
+fs.readFile('myfile.txt',(error,data)=>{
+if(error)
+console.log(error);
+else
+{
+console.log(data);
+console.log(data.toString());
+}
+});
+
+//2nd argument is callback function, when the content of the file is read,its content will be assigned as the argument of the callback function.
+//error represent error while reading the file.this error variable will be populated.
+//if no error,content of the file will be assigned in data variable
+
+node node1.js
+we get buffered data.
+//data is by default the stream object,it will carry your file data in the form of bytes.
+//convert byte stream data into strings.i.e byte stream representation of string data.
+
+//console.log(data.toString());
+
+==========================================================================================
+//write content into file
+const fs=require('fs');
+fs.writeFile('myfile.txt','node js file write demo',(error)=>{ 
+//if write operation has successfully executed,callback will be executed.if unsuccessfull u will get error in the argument,error msg will be log on the console. override the original content.
+if(error)
+console.log(error);
+else
+console.log("data saved into file");
+});
+===================================================================================
+//append the data==>persist the older data and append along with new data.
+const fs=require('fs');
+fs.appendFile('myfile.txt','\nnode js file append demo',(error)=>{ 
+//if success it will execute successfull otherwise error msg will be display. override the original content.
+if(error)
+console.log(error);
+else
+console.log("data saved into file");
+});
+
+====================================================================
+readFile ,writeFile,appendFile are asynchronous.
+
+console.log(" operation started");
+const fs=require('fs');
+fs.appendFile('myfile1.txt','new data',(error)=>{ 
+if(error)
+console.log(error);
+else
+console.log("data saved into file");
+});
+console.log(" operation ended");
+===============================================================================
+assignment
+readFilesync(),writeFileSync(),
+
+===============================================
+//write() create and write the content into the file even if file is not present
+const fs=require('fs');
+fs.writeFile('demo.txt','node js file ',(error)=>{ 
+if(error)
+console.log(error);
+else
+console.log("data saved into file");
+});
+===================================================
+============================================
+delete a file
+const fs=require('fs');
+fs.unlink('demo.txt',(error)=>{  
+if(error)
+console.log(error);
+else
+console.log("file deleted");
+});
+=============================================
+rename a file
+const fs=require('fs');
+fs.rename('demo.txt','demo1.txt ',(error)=>{ 
+if(error)
+console.log(error);
+else
+console.log(" file rename");
+});
+======================================================================
+above functions are asynchronus.all function takes 1 callback function
+=========================================================================
+sync read operation and write syn operation
+==>readFileSync and writFileSync()===>no callback. directly call the function. if u r reading the file, will get contents as a return value.
+
+const fs=require('fs');
+console.log("before reading file");
+const data=fs.readFileSync('newdemo.txt');//it will return the value 
+console.log(data);
+console.log(data.toString());
+console.log("after reading file");
+===============================================================
