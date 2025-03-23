@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 1</title>
+</head>
+<body>
+    <form id="form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+        <input type="button" value="Submit" onclick="submit_form()">
+        <p id="result">
+        </p>
+    </form>
+    
+    <script>
+        function submit_form(){
+            var name3 = document.getElementById("name").value;
+        var password3 = document.getElementById("password").value;
+        var result = document.getElementById("result");
+
+        if((name3 == "iet" && password3 == "123") || (name3 == "cdac" && password3 == "456") ||
+        (name3 == "software" && password3 == "789")){
+            result.innerHTML = "Welcome " + name3;
+            result.style.color = "green";
+            
+        }else{
+            result.innerHTML = "Invalid username or password";
+            result.style.color = "red";
+            
+        }
+    }
+        
+        
+
+    </script>
+</body>
+</html>
