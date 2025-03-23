@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Registration Form</title>
+</head>
+
+<body>
+  <h1>Registration Form</h1>
+
+  <label>Name:</label>
+  <input type="text" id="name"><br><br>
+
+  <label>Email:</label>
+  <input type="email" id="email"><br><br>
+
+  <label>Date of Birth:</label>
+  <input type="date" id="dob"><br><br>
+
+  <button onclick="submitForm()">OK</button>
+  <button onclick="clearForm()">Clear</button>
+
+  <p id="result"></p>
+
+  <script>
+    function submitForm() {
+      let name = document.getElementById("name").value.trim();
+      let email = document.getElementById("email").value.trim();
+      let dob = document.getElementById("dob").value;
+
+      if (!name || !email || !dob) {
+        document.getElementById("result").innerHTML = 
+          "<span style='color: red;'>All fields are required!</span>";
+        return;
+      }
+
+      // Calculate Age from DOB
+      let birthDate = new Date(dob);
+      let today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      let monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      // Validate Age (18 to 100 years)
+      if (age < 18 || age > 100) {
+        document.getElementById("result").innerHTML = 
+          "<span style='color: red;'>You must be between 18 and 100 years old!</span>";
+        return;
+      }
+
+      // Display Form Data
+      document.getElementById("result").innerHTML = `
+        ✅ <b>Name:</b> ${name} <br>
+        <b>Email:</b> ${email} <br>
+        <b>Date of Birth:</b> ${dob} <br>
+        <b>Age:</b> ${age} years
+      `;
+    }
+
+    function clearForm() {
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("dob").value = "";
+      document.getElementById("result").innerHTML = "";
+    }
+  </script>
+</body>
+
+</html>

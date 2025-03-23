@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>Text Formatter</title>
+</head>
+
+<body>
+  <h2>Text Formatter</h2>
+  
+  <label>Enter Text:</label>
+  <input type="text" id="inputText" /><br><br>
+  
+  <label>Select Format:</label>
+  <select id="format">
+    <option value="">Select</option>
+    <option value="B">Bold</option>
+    <option value="I">Italic</option>
+    <option value="U">Underline</option>
+    <option value="BIU">Bold, Italic & Underline</option>
+  </select><br><br>
+
+  <p id="output">Your formatted text will appear here.</p>
+
+  <script>
+    $(document).ready(function() {
+      $("#format").change(function() {
+        let text = $("#inputText").val();
+        let format = $("#format").val();
+
+        let formattedText = text;
+
+        
+        switch (format) {
+          case 'B':
+            formattedText = `<b>${text}</b>`;
+            break;
+          case 'I':
+            formattedText = `<i>${text}</i>`;
+            break;
+          case 'U':
+            formattedText = `<u>${text}</u>`;
+            break;
+          case 'BIU':
+            formattedText = `<b><i><u>${text}</u></i></b>`;
+            break;
+        }
+        $("#output").html(formattedText);
+      });
+    });
+  </script>
+</body>
+
+</html>

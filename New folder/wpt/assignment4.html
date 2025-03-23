@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4</title>
+</head>
+<body>
+    <div id="container">
+        <h2>This the fourth assignment</h2>
+        <input type="date" id="input1" placeholder="Enter your name" onchange="myFunction()">
+        <p id="result"></p>
+    </div>
+    <script>
+        function myFunction() {
+            var date= document.getElementById("input1").value;
+            result_date = document.getElementById("result").innerHTML = `selected date is ${date}`;
+
+        }
+
+    </script>
+</body>
+</html>
