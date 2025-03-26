@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Interactive Gallery</title>
+  <title>Advanced Interactive Gallery</title>
   
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  
+  <!-- FontAwesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   
   <style>
@@ -49,14 +50,6 @@
       width: 100%;
       height: auto;
     }
-    .filter-buttons {
-      margin: 20px 0;
-      text-align: center;
-    }
-    .search-container {
-      margin: 20px auto;
-      max-width: 500px;
-    }
     .favorite-btn {
       position: absolute;
       top: 10px;
@@ -74,16 +67,15 @@
   </style>
 </head>
 <body>
-  
   <div class="container my-5">
     <h1 class="text-center mb-4">Advanced Image Gallery</h1>
     
     <!-- Search Box -->
     <div class="search-container">
-      <input type="text" class="form-control" id="searchInput" placeholder="Search images...">
+      <input type="text" class="form-control" id="searchInput" placeholder="Search images..." aria-label="Search images">
     </div>
 
-    
+    <!-- Filter Buttons -->
     <div class="filter-buttons">
       <button class="btn btn-primary active" data-filter="all">All</button>
       <button class="btn btn-secondary" data-filter="nature">Nature</button>
@@ -93,19 +85,19 @@
 
     <!-- Gallery Container -->
     <div class="row" id="galleryContainer">
-      <!-- Gallery Items Example -->
+      <!-- Gallery Items -->
       <div class="col-md-3 col-sm-6 gallery-item" data-category="nature">
-        <button class="btn btn-sm btn-warning favorite-btn"><i class="fas fa-star"></i></button>
-        <img src="https://source.unsplash.com/random/600x400?nature" alt="Nature" class="img-fluid">
+        <button class="btn btn-sm btn-warning favorite-btn" aria-label="Toggle favorite"><i class="fas fa-star"></i></button>
+        <img src="https://source.unsplash.com/random/600x400?nature" alt="Nature - Scenic Landscape" class="img-fluid">
         <div class="image-overlay">
           <h3>Nature</h3>
           <p>Beautiful natural landscape</p>
         </div>
       </div>
-      
+
       <div class="col-md-3 col-sm-6 gallery-item" data-category="architecture">
-        <button class="btn btn-sm btn-warning favorite-btn"><i class="fas fa-star"></i></button>
-        <img src="https://source.unsplash.com/random/600x400?architecture" alt="Architecture" class="img-fluid">
+        <button class="btn btn-sm btn-warning favorite-btn" aria-label="Toggle favorite"><i class="fas fa-star"></i></button>
+        <img src="https://source.unsplash.com/random/600x400?architecture" alt="Architecture - Urban Building" class="img-fluid">
         <div class="image-overlay">
           <h3>Architecture</h3>
           <p>Stunning buildings and designs</p>
@@ -113,8 +105,8 @@
       </div>
 
       <div class="col-md-3 col-sm-6 gallery-item" data-category="technology">
-        <button class="btn btn-sm btn-warning favorite-btn"><i class="fas fa-star"></i></button>
-        <img src="https://source.unsplash.com/random/600x400?technology" alt="Technology" class="img-fluid">
+        <button class="btn btn-sm btn-warning favorite-btn" aria-label="Toggle favorite"><i class="fas fa-star"></i></button>
+        <img src="https://source.unsplash.com/random/600x400?technology" alt="Technology - Futuristic Innovation" class="img-fluid">
         <div class="image-overlay">
           <h3>Technology</h3>
           <p>Innovation and future tech</p>
@@ -139,70 +131,52 @@
     </div>
   </div>
 
-  
+  <!-- Bootstrap JS and jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     $(document).ready(function() {
-      let images = [];
       const galleryItems = $('.gallery-item');
 
+      // Load Favorite States
       galleryItems.each(function(index) {
-        images.push({
-          src: $(this).find('img').attr('src'),
-          title: $(this).find('h3').text(),
-          description: $(this).find('p').text(),
-          category: $(this).data('category')
-        });
+        const isFavorite = localStorage.getItem(`favorite-${index}`) === 'true';
+        $(this).find('.favorite-btn').toggleClass('favorite-star', isFavorite);
       });
 
-      // Filter Images
-      $('.filter-buttons button').click(function() {
-        const filter = $(this).data('filter');
-        $('.filter-buttons button').removeClass('active');
-        $(this).addClass('active');
-        
-        galleryItems.hide();
-        if(filter === 'all') {
-          galleryItems.fadeIn();
-        } else {
-          $(`.gallery-item[data-category="${filter}"]`).fadeIn();
-        }
+      // Enhanced Favorite Functionality
+      $('.favorite-btn').click(function(e) {
+        e.stopPropagation();
+        const btn = $(this);
+        btn.toggleClass('favorite-star');
+        const imageId = btn.closest('.gallery-item').index();
+        localStorage.setItem(`favorite-${imageId}`, btn.hasClass('favorite-star'));
       });
 
-      // Search Function
-      $('#searchInput').on('keyup', function() {
-        const searchTerm = $(this).val().toLowerCase();
-        galleryItems.each(function() {
-          const text = $(this).find('h3, p').text().toLowerCase();
-          $(this).toggle(text.includes(searchTerm));
-        });
-      });
-
-      // Image Modal
+      // Modal with Alt Text
       $('.gallery-item').click(function() {
         const imgSrc = $(this).find('img').attr('src');
         const title = $(this).find('h3').text();
         const description = $(this).find('p').text();
+        const altText = $(this).find('img').attr('alt');
         
-        $('#modalImage').attr('src', imgSrc);
+        $('#modalImage').attr('src', imgSrc).attr('alt', altText);
         $('#modalTitle').text(title);
         $('#modalDescription').text(description);
-        
+
         const modal = new bootstrap.Modal(document.getElementById('imageModal'));
         modal.show();
       });
 
-     
-      $('.favorite-btn').click(function(e) {
-        e.stopPropagation();
-        $(this).toggleClass('favorite-star');
-        const imageId = $(this).closest('.gallery-item').index();
-        localStorage.setItem(`favorite-${imageId}`, $(this).hasClass('favorite-star'));
+      // Error Handling for Images
+      document.querySelectorAll('img').forEach(img => {
+        img.onerror = function() {
+          this.style.display = 'none';
+          this.parentElement.innerHTML = '<div class="text-danger p-3">Image failed to load</div>';
+        };
       });
     });
   </script>
-
 </body>
 </html>
