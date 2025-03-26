@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced Interactive Gallery</title>
+  <title> Interactive Gallery</title>
   
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   
-  <!-- FontAwesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   
   <style>
@@ -85,7 +83,7 @@
       <input type="text" class="form-control" id="searchInput" placeholder="Search images...">
     </div>
 
-    <!-- Filter Buttons -->
+    
     <div class="filter-buttons">
       <button class="btn btn-primary active" data-filter="all">All</button>
       <button class="btn btn-secondary" data-filter="nature">Nature</button>
@@ -141,7 +139,7 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS and jQuery -->
+  
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -196,7 +194,7 @@
         modal.show();
       });
 
-      // Favorite Functionality
+     
       $('.favorite-btn').click(function(e) {
         e.stopPropagation();
         $(this).toggleClass('favorite-star');
