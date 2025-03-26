@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Interactive Gallery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Existing styles... */
+
+        /* New Styles */
+        .filter-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .favorite-btn {
+            opacity: 1;
+        }
+
+        .search-container {
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        .social-sharing {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .social-sharing a {
+            margin: 0 5px;
+            color: #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .social-sharing a:hover {
+            transform: scale(1.2);
+        }
+
+        .download-btn {
+            margin-top: 10px;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .modal-prev {
+            left: 15px;
+        }
+
+        .modal-next {
+            right: 15px;
+        }
+
+        .favorite-star {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">Advanced Image Gallery</h1>
+    
+    <!-- Search Box -->
+    <div class="search-container">
+        <input type="text" class="form-control" id="searchInput" placeholder="Search images...">
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        <button class="btn btn-primary active" data-filter="all">All</button>
+        <button class="btn btn-secondary" data-filter="nature">Nature</button>
+        <button class="btn btn-secondary" data-filter="architecture">Architecture</button>
+        <button class="btn btn-secondary" data-filter="technology">Technology</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div class="row" id="galleryContainer">
+        <!-- Gallery Items -->
+        <div class="col-md-3 col-sm-6 gallery-item" data-category="nature">
+            <button class="btn btn-sm btn-warning favorite-btn"><i class="fas fa-star"></i></button>
+            <img src="https://source.unsplash.com/random/600x400?nature" alt="Nature" class="img-fluid">
+            <div class="image-overlay">
+                <h3>Nature</h3>
+                <p>Beautiful natural landscape</p>
+            </div>
+        </div>
+        <!-- Add more gallery items with different categories -->
+    </div>
+</div>
+
+<!-- Modal (keep existing modal structure) -->
+<!-- Add navigation arrows inside modal -->
+<button class="modal-nav modal-prev"><i class="fas fa-chevron-left"></i></button>
+<button class="modal-nav modal-next"><i class="fas fa-chevron-right"></i></button>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        let currentIndex = 0;
+        let images = [];
+        const galleryItems = $('.gallery-item');
+
+        // Initialize images array
+        galleryItems.each(function(index) {
+            images.push({
+                src: $(this).find('img').attr('src'),
+                title: $(this).find('h3').text(),
+                description: $(this).find('p').text(),
+                category: $(this).data('category')
+            });
+        });
+
+        // New Features:
+
+        // 1. Image Filtering
+        $('.filter-buttons button').click(function() {
+            const filter = $(this).data('filter');
+            $('.filter-buttons button').removeClass('active');
+            $(this).addClass('active');
+            
+            galleryItems.hide();
+            if(filter === 'all') {
+                galleryItems.fadeIn();
+            } else {
+                $(`.gallery-item[data-category="${filter}"]`).fadeIn();
+            }
+        });
+
+        // 2. Lightbox Navigation
+        function showImage(index) {
+            const image = images[index];
+            $('#modalImage').attr('src', image.src);
+            $('#modalTitle').text(image.title);
+            $('#modalDescription').text(image.description);
+            currentIndex = index;
+        }
+
+        $('.modal-next').click(() => showImage((currentIndex + 1) % images.length));
+        $('.modal-prev').click(() => showImage((currentIndex - 1 + images.length) % images.length));
+
+        // 3. Social Sharing
+        function initSocialSharing() {
+            const socialHtml = `
+                <div class="social-sharing">
+                    <a href="#" class="facebook-share"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="twitter-share"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="pinterest-share"><i class="fab fa-pinterest"></i></a>
+                </div>
+            `;
+            $('.modal-content').append(socialHtml);
+        }
+
+        // 4. Download Button
+        function initDownloadButton() {
+            const downloadBtn = $('<button class="btn btn-primary download-btn">Download</button>');
+            downloadBtn.click(function() {
+                const link = document.createElement('a');
+                link.href = $('#modalImage').attr('src');
+                link.download = 'image.jpg';
+                link.click();
+            });
+            $('.modal-body').append(downloadBtn);
+        }
+
+        // 5. Lazy Loading
+        function lazyLoadImages() {
+            $('img').each(function() {
+                if($(this).isInViewport()) {
+                    $(this).attr('src', $(this).data('src'));
+                }
+            });
+        }
+
+        // 6. Image Search
+        $('#searchInput').on('keyup', function() {
+            const searchTerm = $(this).val().toLowerCase();
+            galleryItems.each(function() {
+                const text = $(this).find('h3, p').text().toLowerCase();
+                $(this).toggle(text.includes(searchTerm));
+            });
+        });
+
+        // 7. Loading Spinner
+        $(document).ajaxStart(function() {
+            $('.loading-spinner').show();
+        }).ajaxStop(function() {
+            $('.loading-spinner').hide();
+        });
+
+        // 8. Favorites System
+        $('.favorite-btn').click(function(e) {
+            e.stopPropagation();
+            $(this).toggleClass('favorite-star');
+            const imageId = $(this).closest('.gallery-item').index();
+            localStorage.setItem(`favorite-${imageId}`, $(this).hasClass('favorite-star'));
+        });
+
+        // Initialize
+        initSocialSharing();
+        initDownloadButton();
+        lazyLoadImages();
+    });
+</script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Image Gallery</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .gallery-item {
+            position: relative;
+            margin: 10px;
+            overflow: hidden;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .gallery-item:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">Interactive Image Gallery</h1>
+    <div class="row">
+        <!-- Gallery Items -->
+        <div class="col-md-3 col-sm-6">
+            <div class="gallery-item">
+                <img src="https://source.unsplash.com/random/600x400?nature" alt="Nature" class="img-fluid">
+                <div class="image-overlay">
+                    <h3>Nature</h3>
+                    <p>Click to view details</p>
+                </div>
+            </div>
+        </div>
+        <!-- Add more gallery items with different images -->
+        <!-- Repeat the col-md-3 col-sm-6 block with different images -->
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="Modal Image" class="modal-image" id="modalImage">
+                <p id="modalDescription" class="mt-3"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Handle image click
+        $('.gallery-item').click(function() {
+            const imgSrc = $(this).find('img').attr('src');
+            const title = $(this).find('h3').text();
+            
+            $('#modalImage').attr('src', imgSrc);
+            $('#modalTitle').text(title);
+            $('#modalDescription').text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            
+            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            modal.show();
+        });
+
+        // Add hover effect for touch devices
+        $('.gallery-item').on('touchstart', function() {
+            $(this).addClass('hover');
+        });
+        
+        $('.gallery-item').on('touchend', function() {
+            $(this).removeClass('hover');
+        });
+    });
+</script>
+
+</body>
+</html>
