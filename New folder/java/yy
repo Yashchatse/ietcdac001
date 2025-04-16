@@ -1,0 +1,91 @@
+import java.util.*;
+
+public class MatrixOperations {
+    public static void main(String[] args) {
+        int[][] A = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        int[][] B = {
+            {9, 8, 7},
+            {6, 5, 4},
+            {3, 2, 1}
+        };
+
+        int rows = A.length;
+        int cols = A[0].length;
+
+        // 1. Row-wise Sum
+        System.out.println("Row-wise Sum:");
+        for (int i = 0; i < rows; i++) {
+            int rowSum = 0;
+            for (int j = 0; j < cols; j++) {
+                rowSum += A[i][j];
+            }
+            System.out.println("Row " + i + " = " + rowSum);
+        }
+
+        // 2. Column-wise Sum
+        System.out.println("\nColumn-wise Sum:");
+        for (int j = 0; j < cols; j++) {
+            int colSum = 0;
+            for (int i = 0; i < rows; i++) {
+                colSum += A[i][j];
+            }
+            System.out.println("Column " + j + " = " + colSum);
+        }
+
+        // 3. Transpose
+        System.out.println("\nTranspose of A:");
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                System.out.print(A[j][i] + " ");
+            }
+            System.out.println();
+        }
+
+        // 4. Add two matrices
+        System.out.println("\nAddition of A + B:");
+        int[][] sum = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sum[i][j] = A[i][j] + B[i][j];
+                System.out.print(sum[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        // 5. Multiply two matrices
+        System.out.println("\nMultiplication of A * B:");
+        int[][] product = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                product[i][j] = 0;
+                for (int k = 0; k < cols; k++) {
+                    product[i][j] += A[i][k] * B[k][j];
+                }
+                System.out.print(product[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        // 6. Min, Max, 2nd Largest, 2nd Smallest
+        List<Integer> elements = new ArrayList<>();
+        for (int[] row : A)
+            for (int num : row)
+                elements.add(num);
+
+        Collections.sort(elements);
+        int min = elements.get(0);
+        int secondMin = elements.get(1);
+        int max = elements.get(elements.size() - 1);
+        int secondMax = elements.get(elements.size() - 2);
+
+        System.out.println("\nMin: " + min);
+        System.out.println("Second Min: " + secondMin);
+        System.out.println("Max: " + max);
+        System.out.println("Second Max: " + secondMax);
+    }
+}
