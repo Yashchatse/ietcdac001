@@ -1,0 +1,301 @@
+
+npm i  redux react-redux @reduxjs/toolkit
+================================================
+LanguageAction.js
+export function changeLanguage(){
+    return {type:'CHANGE_LANGUAGE'}
+}
+===============================================================
+ThemeAction.js
+export function changeTheme(){
+    return {type:'CHANGE_THEME'}
+}
+=================================================
+
+LanguageReducer.js
+const initialstate={lang:'english'}
+export const languageReducer=(state=initialstate,action)=>{
+    switch(action.type){
+        case 'CHANGE_LANGUAGE':
+            return state.lang=== 'english' ? {lang:'german'}: {lang:'english'}
+        default: return state;
+    }
+
+} 
+
+=========================================================
+ThemeReducer.js
+const initialstate={theme:'light'}
+export const themeReducer=(state=initialstate,action)=>{
+    switch(action.type){
+        case 'CHANGE_THEME':
+            return state.theme=== 'light' ? {theme:'dark'}: {theme:'light'}
+        default: return state;
+    }
+
+} 
+================================================================
+
+RootReducer.js
+import {combineReducers} from "redux"
+import { languageReducer } from "./LanguageReducer";
+import { themeReducer } from "./ThemeReducer";
+export const rootReducer=combineReducers({languageReducer,themeReducer});
+=======================================================
+
+store.js
+import {configureStore} from "@reduxjs/toolkit";
+import { rootReducer } from "./Reducers/RootReducer";
+export const store=configureStore({reducer:rootReducer});
+=======================================================================
+index.js
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import {Provider} from "react-redux"
+import { store } from './store';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+     <App />
+    </Provider>
+   
+  </React.StrictMode>
+);
+
+===============================================================
+
+Setting.js
+
+import { useDispatch, useSelector } from "react-redux"
+import { changeLanguage } from "../Actions/LanguageAction";
+import { changeTheme } from "../Actions/ThemeAction";
+
+export function Settings(){
+
+    /*const currentlang=useSelector((state)=>{
+    //console.log(state);
+   // console.log(state.languageReducer.lang);
+   return state.languageReducer.lang;
+
+    });*/
+
+   const currentlang=useSelector(state=> state.languageReducer.lang);
+    const currenttheme=useSelector(state=> state.themeReducer.theme);
+
+    const dispatch=useDispatch();
+    const handleLanguageChange=()=>{
+        dispatch(changeLanguage());
+
+    }
+    const handleThemeChange=()=>{
+        dispatch(changeTheme());
+
+    }
+
+    return(
+        <div>
+            <h3>Current Language:{currentlang} Current Theme:{currenttheme}</h3>
+            <button onClick={handleLanguageChange}>Change Language</button>
+            <button onClick={handleThemeChange}>Change Theme</button>
+        </div>
+    )
+}
+//state will refer to the rootReducer and in the rootReducer we will have two keys i.e languageReducer and themeReducer
+
+=======================================================================================
+Home.js
+
+import { useSelector } from "react-redux";
+export function Home(){
+    const currentlang=useSelector(state=> state.languageReducer.lang);
+
+
+    return(
+        <div>
+            <h4>welcome to {currentlang=== 'english' ? 'Properties' : 'Eigenschaften'} App</h4>
+            <h4></h4>
+        </div>
+
+    )
+}
+============================================================================
+theme.css
+
+.Dark{
+    background: black;
+    color: white;
+}
+
+=============================================================
+App.js
+
+import { Home } from "./Components/Home";
+import { Settings } from "./Components/Settings";
+import './theme.css'
+import { useSelector } from "react-redux";
+function App() {
+    const currenttheme=useSelector(state=> state.themeReducer.theme);
+  return (
+    <div className={currenttheme==='dark'?'Dark': ' '}>
+      <Home></Home>
+      <Settings></Settings>
+    </div>
+  );
+}
+
+export default App;
+=====================================================================
+
+Error Boundaries
+
+
+==>Runtime errors during rendering  could put our application in a broken state i.e React will unmount entire component tree.
+==>Error boundaries are react components that catch js error in their child components tree,log those errors and display a fallback UI
+==>A class methods that implements either one or both of the lifecycle methods getDerivedStateFromError(used to render a fallback UI after an error is thrown) or ComponentDidCatch(used to log the error information) becomes an error boundary
+Error boundaries are React components that catch errors during rendering, in constructors, lifecycle methods, and within child components. They prevent the entire React application from crashing due to errors in specific components.
+    Catches errors inside the component tree
+    Prevents entire app crashes
+    Displays a fallback UI
+    Logs error details for debugging
+
+
+ErrorBoundaries do not catch errors in:
+
+    Event handlers
+    Asynchronous code (e.g., setTimeout, requestAnimationFrame)
+    Server-side rendering (SSR)
+    Errors thrown inside the error boundary component itself.
+=========================================================
+
+When to Use Which Approach?
+Use Error Boundaries When
+
+    You want to handle errors occurring in React component trees
+    You need to prevent an entire React app from crashing
+    You want to display a fallback UI instead of breaking the app
+
+Use Try-Catch When
+
+    You want to handle errors in event handlers, functions, or scripts
+    You are dealing with asynchronous errors (e.g., API requests, Promises)
+    You need to handle runtime JavaScript errors inside a specific block of code
+
+
+
+Hero.js
+import { useState } from "react"
+import { Counter1 } from "./Counter1";
+import { Counter2 } from "./Counter2";
+export function Hero(){
+
+    const[counter1,setCounter1]=useState(0);
+    const incrementCounter1=()=>{
+        setCounter1(counter1+1);
+    }
+    const[counter2,setCounter2]=useState(0);
+    const incrementCounter2=()=>{
+        setCounter2(counter2+1);
+    }
+    return(
+        
+        <div>
+        <div>
+        <Counter1 value={counter1} onClick={incrementCounter1}></Counter1>
+        </div>
+         <div>
+        <Counter2 value={counter2} onClick={incrementCounter2}></Counter2>
+        </div>
+        </div>
+    )
+}
+=====================================================
+Counter1.js
+
+import { Component } from "react";
+
+export class Counter1 extends Component{
+    render(){
+        if(this.props.value>5)
+            throw new Error("too many values");
+        return(
+            <div>
+                 <h2>counter 1 is :</h2>
+                <h3>{this.props.value}</h3>
+                <button onClick={this.props.onClick}>ADD</button>
+            </div>
+        )
+    }
+}
+=========================================================
+Counter2.js
+
+import { Component } from "react";
+
+export class Counter2 extends Component{
+    render(){
+        return(
+            <div>
+                <h2>counter 2 is :</h2>
+                <h3>{this.props.value}</h3>
+                <button onClick={this.props.onClick}>ADD</button>
+            </div>
+        )
+    }
+}
+=========================================================
+import { Component } from "react";
+
+export class ErrorBoundary extends Component{
+    state={
+        error:''
+    }
+    static getDerivedStateFromError(error){
+        return{
+            error:error
+        }
+    }
+    componentDidCatch(error,info){
+        console.log('error is ',error);
+        console.log('info is ',info);
+
+    }
+    render(){
+        if(this.state.error){
+            return(
+                <div>
+                    <h2>some error occured</h2>
+                  
+                </div>
+            )
+        }
+       return this.props.children
+
+        }
+}
+=================================================================
+import { Hero } from "./Components/Hero";
+import { ErrorBoundary } from "./Components/ErrorBoundary";
+import { Settings } from "./Components/Settings";
+function App() {
+   
+  return (
+   
+    <div>
+       <h2>hello</h2>
+      <ErrorBoundary>
+      <Hero></Hero>
+      </ErrorBoundary>
+      <Settings></Settings>
+      <h2>bye</h2>
+    </div>
+  );
+}
+
+export default App;
+================================================================

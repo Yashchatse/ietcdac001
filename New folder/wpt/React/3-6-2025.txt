@@ -1,0 +1,220 @@
+REDUX
+
+A.jsx
+export function A(){
+const[data,setData]=useState("hello);
+return(
+	<B mydata={data} ><B/>
+)
+}
+
+B.jsx
+export function B(prop){
+return(
+	<C mydata={props.mydata}><C/>
+)
+}
+
+C.jsx
+export function C(props){
+return(
+	<D mydata={props.mydata}><D/>
+)
+}
+
+D.jsx
+export function D(props){
+return(
+	<h1>{props.mydata}</h1>
+)
+}
+
+inorder to pass a data to any component in the hierarchy we are passing the data into each components props.this is known as props drilling.
+challenges is 
+1)managment of data handling is costly
+2)handle certain data that will be globally available through out the application.
+
+to avoid the limitations of props drilling and to handle certain data that will be globally available through out the application.
+ we have to use REDUX
+
+Redux: using redux we can prevent props drilling and it will become easy to maintain the data that should be accessed across multiple components.
+=========================================================
+
+process of redux
+==>if we want to prevent props drilling and to maintain centralized data , for that purpose  first understand three major building blocks
+1)Action 
+2)Reducer
+3)Store
+
+
+store:A store used to contain the global state/data centrally.
+==>approach is we will not store data in the local state of the component,will going to store that data centrally in redux store which is accessible across any components.
+i.e API response,static data,selected language and selected theme
+==>if redux store updates the value of state,then those components who accessed the state that component will automatically re-rendered.
+
+
+ 
+Action: 
+==>occurance of any activity will be an action.
+==>Action is an object in redux that contains name of the activity.
+==>whatever the operation we want to perform that will change the state,that operation name we have to contain inside Action.
+ex:one action created for increment and other for decrement.
+==>for  each activity we have to create each action.
+==>action is an object  that represent to the activity operation's name and based on the action fired,it will either access or store data from the store
+eg:{type:'increment}
+key and name of the action
+
+why action?
+if we want to update data in the store ,it will happen only on the basis of action.
+note:action will not perform any logical operation.
+
+Reducer:
+==>it is a function that manipulates the store on the basis of action fired/dispatch
+==>reducer function will always have access to action and store.
+==>reducer will return a value and return value will be stored in redux store.
+
+user clicks==>+ button===>fired/dispatch action and based on action==>reducer==.>manipulate data in store==>all the component who are accessing that store will be re-rendered
+================================================================================================
+
+ npm i redux react-redux @reduxjs/toolkit
+
+
+
+
+
+
+ScoreAction.js
+export function incrementScore(){
+    return {type:'INCREMENT'};
+}
+export function decrementScore(){
+    return {type:'DECREMENT'};
+}
+============================================
+ScoreReducer.js
+
+
+const initialstate={score:0}
+export const scoreReducer=(state=initialstate,action)=>{
+    switch(action.type){
+        case 'INCREMENT':return {score:state.score+4};
+         case 'DECREMENT':return {score:state.score-1};
+        default:return state;
+
+
+    }
+
+} 
+================================================================
+Store.js
+import {configureStore} from "@reduxjs/toolkit"
+import { rootreducer } from "./reducers/RootReducer";
+export const store=configureStore({reducer:rootreducer});
+
+//it will return the reference of the store.
+
+
+/*we have to register all the reducers inside configureStore()
+in case of multiple reducer,we must combine all of them and we should create a root reducer and then mention root reducer in configurestore()
+in RootReducer.js
+const rootreducer=combineReducer({scorereducer,studentreducer})
+
+scorereducer:key
+function represent value
+*/
+
+============================================================================
+RootReducer.js
+import { combineReducers } from "redux";
+import { scoreReducer } from "./ScoreReducer";
+
+export const rootreducer=combineReducers({scoreReducer});
+
+
+
+========================================================
+ex:var x=1;
+var y=2
+var obj={x,y}
+{x:1,y:2}
+
+
+{rootreducer:
+		{scoreReducer:()=>{}},
+
+ }
+
+rootreducer.scoreReducer.score ==>will represent the score state
+=======================================================================
+Index.js
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import {Provider} from "react-redux"
+import {store} from './store'
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+    <App />
+    </Provider>
+  </React.StrictMode>
+);
+
+
+
+============================================================
+ScoreBoard.js
+import { useDispatch, useSelector } from "react-redux"
+import { decrementScore, incrementScore } from "./actions/ScoreActions";
+
+export function ScoreBoard(){
+    const score=useSelector((state)=>{
+    return state.scoreReducer.score;
+
+    }) 
+    const dispatch=useDispatch();
+    const handleplusclick=()=>{
+        dispatch(incrementScore());
+
+    }
+    const handleminusclick=()=>{
+        dispatch(decrementScore());
+    }
+    return(
+        <div>
+            <h1>{score}</h1>
+            <button onClick={handleplusclick}>+</button>
+             <button onClick={handleminusclick}>-</button>
+        </div>
+    )
+}
+
+
+
+
+
+
+=================================================================
+useSelector() is a hook to access redux store's state. this hook accept an argument that is callback function and this callback () is referred as selector function and in this selector function,we will get redux store state as an argument. the argument of selector function will contain refrence to redux store's state.
+
+useSelector((state)=>{
+
+console.log(state);
+console.log(state.scoreReducer.score};
+
+});
+
+======================================================================
+==>inorder to manipulate the store state ,we need to execute the reducer. now to execute a reducer,we must dispatch an action.
+and to dispatch an action,we need a function to dispatch .
+the function to dispatch an action will be provided by hook useDispatch()
+
+
+const dispatch=useDispatch();
+dispatch(action object)
+
+====================================================================================
